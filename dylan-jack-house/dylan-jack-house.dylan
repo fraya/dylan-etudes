@@ -17,9 +17,9 @@ end;
   
 define function parts
     (poem :: <poem>, n :: <integer>) => (lines :: <sequence>)
-  let _end = poem.poem-phrases.size;
-  let _seq = copy-sequence(poem.poem-phrases, start: _end - n);
-  poem.poem-formatter(_seq)
+  let _end    = poem.poem-phrases.size;
+  let phrases = copy-sequence(poem.poem-phrases, start: _end - n);
+  poem.poem-formatter(phrases)
 end;
 
 define function phrase
@@ -34,7 +34,6 @@ end;
 
 define function recite
     (poem :: <poem>) => (line :: <string>)
-  join(map(method (i) line(poem, i) end,
-	   range(from: 1, to: poem.poem-phrases.size)),
-       "\n")
+  let phrases = range(from: 1, to: poem.poem-phrases.size);
+  join(map(method (i) line(poem, i) end, phrases, "\n")
 end;
