@@ -1,0 +1,12 @@
+{
+    "dependencies": [  ],
+    "dev-dependencies": [ "testworks" ],
+    "description": "YOUR DESCRIPTION HERE",
+    "name": "dylan-jack-house",
+    "version": "0.1.0",
+    "url": "https://github.com/YOUR-ORG-HERE/YOUR-REPO-HERE",
+    "keywords": [ ],
+    "contact": "",
+    "license": "",
+    "license-url": ""
+}
