@@ -2,6 +2,7 @@
 
 # dylan-server log files
 *.log
+*.log.*
 
 _build/
 _packages/
