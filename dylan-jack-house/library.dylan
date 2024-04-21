@@ -15,6 +15,10 @@ define module dylan-jack-house
     <poem>,
     poem-phrases,
     recite;
+
+  create
+    flatten,
+    zip;
 end module;
 
 define module dylan-jack-house-impl
