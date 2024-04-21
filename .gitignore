@@ -1,4 +1,8 @@
 *~
+
+# dylan-server log files
+*.log
+
 _build/
 _packages/
 registry/
