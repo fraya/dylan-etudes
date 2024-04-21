@@ -1,12 +1,14 @@
 {
-    "dependencies": [  ],
+    "dependencies": [
+	"command-line-parser@3.2.0"
+    ],
     "dev-dependencies": [ "testworks" ],
-    "description": "YOUR DESCRIPTION HERE",
+    "description": "Sandi Metz's talk in Rails Conf 2015: Nothing is something",
     "name": "dylan-jack-house",
     "version": "0.1.0",
     "url": "https://github.com/YOUR-ORG-HERE/YOUR-REPO-HERE",
-    "keywords": [ ],
-    "contact": "",
-    "license": "",
-    "license-url": ""
+    "keywords": [ "inheritance", "composition" ],
+    "contact": "fernando raya at gmail",
+    "license": "GPL-3",
+    "license-url": "https://opensource.org/license/gpl-3-0"
 }
