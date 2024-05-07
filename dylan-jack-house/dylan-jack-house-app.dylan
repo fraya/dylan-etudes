@@ -14,16 +14,10 @@ define constant $jack-poem
       "the malt that lay in",
       "the house that Jack built.");
 
-define function jack-house
-    () => (poem :: <poem>)
-  make(<poem>, phrases: $jack-poem)
-end;
-
-define function jack-house-echo
-    () => (poem :: <poem>)
+define function poem-echo (phrases)
   make(<poem>,
-       phrases: $jack-poem,
-       formatter: method (parts) flatten(zip(parts, parts)) end)       
+       phrases: phrases,
+       formatter: method (parts) flatten(zip(parts, parts)) end)
 end;
 
 define command-line <poem-command-line> ()
@@ -39,9 +33,9 @@ define function poem-of-choice
     (choice :: <symbol>) => (poem :: <poem>)
   select (choice)
     #"vanilla"
-      => jack-house();
+      => make(<poem>, phrases: $jack-poem);
     #"echo"
-      => jack-house-echo();
+      => poem-echo($jack-poem);
     otherwise
       => error("Unknown poem choice '%s'", choice)
   end
