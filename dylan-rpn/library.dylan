@@ -2,7 +2,9 @@ Module: dylan-user
 
 define library dylan-rpn
   use common-dylan;
-  use io, import: { format-out };
+  use io, 
+    import: { format,
+              format-out };
 
   export
     dylan-rpn,
@@ -11,12 +13,18 @@ end library;
 
 define module dylan-rpn
   create
-    <stack>,
-    stack!,
-    rpn;
+    <calculator>,
+    put!,
+    calculate!;
 end module;
 
 define module dylan-rpn-impl
   use common-dylan;
+  use format;
+  use format-out;
   use dylan-rpn;
+
+  export
+    eval,
+    stack!;
 end module;
