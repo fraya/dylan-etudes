@@ -22,4 +22,4 @@ From Wikipedia:
 
 ## Usage
 
-  _build/bin/dylan-rpn-app 5 1 2 + 4 \* + 3
+  _build/bin/dylan-rpn-app 5 1 2 + 4 \\* + 3
