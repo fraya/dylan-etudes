@@ -13,9 +13,13 @@ end library;
 
 define module dylan-rpn
   create
-    <calculator>,
-    put!,
-    calculate!;
+    <expression>,
+    <operand>,
+    <operator>,
+    operand?,
+    operator?,
+    expression,
+    rpn;
 end module;
 
 define module dylan-rpn-impl

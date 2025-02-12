@@ -1,23 +1,72 @@
 Module: dylan-rpn-impl
 
 define constant <stack> = <deque>;
-define constant <calculator> = <deque>;
+define constant <operand> = <integer>;
+define constant <operator> = <function>;
 define constant <expression> = <list>;
+
+define generic operand? 
+  (input :: <object>) => (_ :: false-or(<operand>));
+
+define method operand? 
+  (input :: <integer>) => (_ :: false-or(<operand>))
+  input
+end;
+
+define method operand? 
+  (input :: <string>) => (_ :: false-or(<operand>))
+  block ()
+    string-to-integer(input)
+  exception (err :: <error>)
+    #f
+  end
+end;
+
+define generic operator?
+  (input :: <object>) => (_ :: false-or(<operator>));
+
+define method operator? 
+  (input :: <function>) => (_ :: false-or(<operator>))
+  input
+end;
+
+define method operator? 
+  (input :: <string>) => (_ :: false-or(<operator>))
+  select (input by \=)
+    "+" => \+;
+    "-" => \-;
+    "*" => \*;
+    "/" => \/;
+    otherwise =>
+      #f;
+  end select
+end;
+
+define function invalid-argument
+  (arg :: <object>) => ()
+  error("Invalid argument: %=", arg)
+end;
+
+define function expression
+    (arguments :: <vector>) => (_ :: <expression>)
+  let expression = make(<expression>);
+  for (arg in arguments)
+    let input =   operand?(arg) 
+                | operator?(arg) 
+                | invalid-argument(arg);
+    expression := add(expression, input)
+  end for;
+  expression
+end;
 
 define function push!
     (s :: <stack>, o :: <object>) => (_ :: <stack>)
   push(s, o); s
 end;
 
-define function put!
-   (c :: <calculator>, o :: <object>) => (_ :: <calculator>)
-  push-last(c, o); 
-  c 
-end;
-
-define function calculate!
-    (c :: <calculator>) => (n :: <integer>)
-  eval(as(<expression>, c), make(<stack>));
+define function rpn
+    (e :: <expression>) => (n :: <integer>)
+  eval(reverse(e), make(<stack>));
 end;
 
 define generic eval
@@ -45,12 +94,12 @@ define method eval-first
 end;
 
 define method eval-first
-    (o :: <integer>, e :: <list>, s :: <stack>) => (n :: <integer>)
+    (o :: <operand>, e :: <list>, s :: <stack>) => (n :: <integer>)
   eval(e, push!(s,o))
 end;
 
 define method eval-first
-    (f :: <function>, e :: <expression>, s :: <stack>) => (result :: <integer>)
+    (f :: <operator>, e :: <expression>, s :: <stack>) => (result :: <integer>)
   let operands = #();
   let n = function-arguments(f);
   for (i from 0 below n)
