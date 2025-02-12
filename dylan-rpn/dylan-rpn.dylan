@@ -1,95 +1,57 @@
 Module: dylan-rpn-impl
 
 define constant <stack> = <deque>;
-define constant <expression> = <vector>;
-
-define function stack!
-    (#rest args) => (stack :: <stack>)
-  let stack = make(<stack>);
-  do(curry(push-last, stack), args);
-  stack
-end;
+define constant <calculator> = <deque>;
+define constant <expression> = <list>;
 
 define function push!
-    (stack :: <stack>, element :: <object>) => (_ :: <stack>)
-  push(stack, element);
-  stack
+    (s :: <stack>, o :: <object>) => (_ :: <stack>)
+  push(s, o); s
 end;
 
-define class <calculator> (<object>)
-  slot calculator-expression :: <expression> = make(<expression>),
-    init-keyword: expression:;
-  constant slot calculator-stack :: <deque> = make(<stack>),
-    init-keyword: stack:;
-end class;
-
-define generic put!
-  (c :: <calculator>, obj :: <object>) => (_ :: <calculator>);
-
-define method put!
-    (c :: <calculator>, obj :: <object>) => (_ :: <calculator>)
-  error("Invalid input: %=", obj)
-end;
-
-define method put!
-    (c :: <calculator>, n :: <integer>) => (_ :: <calculator>)
-  c.calculator-expression := add(c.calculator-expression, n);
-  c
-end;
-
-define method put!
-    (c :: <calculator>, f :: <function>) => (_ :: <calculator>)
-  c.calculator-expression := add(c.calculator-expression, f);
-  c
+define function put!
+   (c :: <calculator>, o :: <object>) => (_ :: <calculator>)
+  push-last(c, o); 
+  c 
 end;
 
 define function calculate!
-    (c :: <calculator>) => (result :: <integer>)
-  block () 
-    let expression = as(<list>, c.calculator-expression);
-    let result = eval(expression, c.calculator-stack);
-    result
-  exception (err :: <error>)
-    error("Error: %=\n%= %=",
-	  err,
-	  c.calculator-expression,
-	  c.calculator-stack)
-  end;
+    (c :: <calculator>) => (n :: <integer>)
+  eval(as(<expression>, c), make(<stack>));
 end;
 
 define generic eval
-  (expression :: <object>, stack :: <stack>) => (result :: <integer>);
+  (e :: <expression>, s :: <stack>) => (n :: <integer>);
 
 define method eval
-    (expression == #(), stack :: <stack>) => (result :: <integer>)
-  unless (stack.size = 1)
-    error("Empty expression with stack elements: %=", stack)
+    (e == #(), s :: <stack>) => (n :: <integer>)
+  unless (s.size = 1)
+    error("Empty expression with stack elements: %=", s)
   end;
-  pop(stack)
+  pop(s)
 end;
 
 define method eval
-    (expression :: <list>, stack :: <stack>) => (result :: <integer>)
-  eval-first(head(expression), tail(expression), stack)
+    (e :: <expression>, s :: <stack>) => (n :: <integer>)
+  eval-first(head(e), tail(e), s)
 end;
 
 define generic eval-first
-  (element :: <object>, expression :: <list>, stack :: <stack>) => (result :: <integer>);
+  (o :: <object>, e :: <expression>, s :: <stack>) => (n :: <integer>);
 
 define method eval-first
-    (obj :: <object>, expr :: <list>, s :: <stack>) => (result :: <integer>)
-  error("Invalid input %=", obj)  
+    (o :: <object>, e :: <expression>, s :: <stack>) => (n :: <integer>)
+  error("Invalid input %=", o)  
 end;
 
 define method eval-first
-    (n :: <integer>, expr :: <list>, s :: <stack>) => (r :: <integer>)
-  eval(expr, push!(s, n))
+    (o :: <integer>, e :: <list>, s :: <stack>) => (n :: <integer>)
+  eval(e, push!(s,o))
 end;
 
 define method eval-first
-    (f :: <function>, expression :: <list>, stack :: <stack>) => (result :: <integer>)
-  let x = pop(stack);
-  let y = pop(stack);
-  let r = apply(f, list(y, x));
-  eval(expression, push!(stack, r))
+    (f :: <function>, e :: <expression>, s :: <stack>) => (result :: <integer>)
+  let x = pop(s);
+  let y = pop(s);
+  eval(e, push!(s, apply(f, list(y, x))))
 end;
