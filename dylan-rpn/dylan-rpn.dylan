@@ -51,7 +51,10 @@ end;
 
 define method eval-first
     (f :: <function>, e :: <expression>, s :: <stack>) => (result :: <integer>)
-  let x = pop(s);
-  let y = pop(s);
-  eval(e, push!(s, apply(f, list(y, x))))
+  let operands = #();
+  let n = function-arguments(f);
+  for (i from 0 below n)
+    operands := add(operands, pop(s))
+  end;
+  eval(e, push!(s, apply(f, operands)))
 end;
