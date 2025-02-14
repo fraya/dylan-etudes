@@ -5,7 +5,7 @@ define test test-rpn-empty ()
                "Empty expression returns last element in stack");
   assert-signals(<error>, eval(#(), make(<stack>)),
                "Empty expression with no elements is an error");
-  let s = push!(push!(make(<stack>), 3), 4);
+  let s = push!(make(<stack>), 3, 4);
   assert-signals(<error>, eval(#(), s),
                "Empty expression with elements in stack is invalid");
 end test;

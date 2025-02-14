@@ -60,8 +60,9 @@ define function expression
 end;
 
 define function push!
-    (s :: <stack>, o :: <object>) => (_ :: <stack>)
-  push(s, o); s
+    (s :: <stack>, #rest args) => (_ :: <stack>)
+  for (arg in args) push(s, arg) end;
+  s
 end;
 
 define function rpn
