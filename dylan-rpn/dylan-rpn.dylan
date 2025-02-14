@@ -8,6 +8,11 @@ define constant <expression> = <list>;
 define generic operand? 
   (input :: <object>) => (_ :: false-or(<operand>));
 
+define method operand?
+  (input :: <object>) => (_ :: false-or(<operand>))
+  #f
+end;
+
 define method operand? 
   (input :: <integer>) => (_ :: false-or(<operand>))
   input
@@ -48,7 +53,7 @@ define function invalid-argument
 end;
 
 define function expression
-    (arguments :: <vector>) => (_ :: <expression>)
+  (#rest arguments) => (_ :: <expression>) 
   let expression = make(<expression>);
   for (arg in arguments)
     let input =   operand?(arg) 
@@ -56,7 +61,7 @@ define function expression
                 | invalid-argument(arg);
     expression := add(expression, input)
   end for;
-  expression
+  reverse(expression)
 end;
 
 define function push!
@@ -67,7 +72,7 @@ end;
 
 define function rpn
     (e :: <expression>) => (n :: <integer>)
-  eval(reverse(e), make(<stack>));
+  eval(e, make(<stack>));
 end;
 
 define generic eval
