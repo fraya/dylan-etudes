@@ -70,6 +70,11 @@ define function push!
   s
 end;
 
+define function stack
+  (#rest elements) => (_ :: <stack>)
+  apply(curry(push!, make(<stack>)), elements)
+end;
+
 define function rpn
     (e :: <expression>) => (n :: <integer>)
   eval(e, make(<stack>));

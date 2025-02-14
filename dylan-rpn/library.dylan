@@ -31,5 +31,6 @@ define module dylan-rpn-impl
   export
     eval,
     <stack>,
+    stack,
     push!;
 end module;
