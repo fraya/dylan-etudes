@@ -77,23 +77,25 @@ end;
 
 define function rpn
     (e :: <expression>) => (n :: <integer>)
-  eval(e, make(<stack>));
+  eval(e);
 end;
 
 define generic eval
-  (e :: <expression>, s :: <stack>) => (n :: <integer>);
+  (e :: <expression>, #key stack :: <stack>) => (n :: <integer>);
 
 define method eval
-    (e == #(), s :: <stack>) => (n :: <integer>)
-  unless (s.size = 1)
-    error("Empty expression with stack elements: %=", s)
+    (e == #(), #key stack :: <stack> = make(<stack>)) 
+ => (n :: <integer>)
+  unless (stack.size = 1)
+    error("Empty expression with stack elements: %=", stack)
   end;
-  pop(s)
+  pop(stack)
 end;
 
 define method eval
-    (e :: <expression>, s :: <stack>) => (n :: <integer>)
-  eval-first(head(e), tail(e), s)
+    (e :: <expression>, #key stack :: <stack> = make(<stack>)) 
+ => (n :: <integer>)
+  eval-first(head(e), tail(e), stack)
 end;
 
 define generic eval-first
@@ -106,7 +108,7 @@ end;
 
 define method eval-first
     (o :: <operand>, e :: <list>, s :: <stack>) => (n :: <integer>)
-  eval(e, push!(s,o))
+  eval(e, stack: push!(s,o))
 end;
 
 define method eval-first
@@ -116,5 +118,5 @@ define method eval-first
   for (i from 0 below n)
     operands := add(operands, pop(s))
   end;
-  eval(e, push!(s, apply(f, operands)))
+  eval(e, stack: push!(s, apply(f, operands)))
 end;
