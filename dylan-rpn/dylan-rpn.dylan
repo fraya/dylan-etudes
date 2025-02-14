@@ -75,15 +75,10 @@ define function stack
   apply(curry(push!, make(<stack>)), elements)
 end;
 
-define function rpn
-    (e :: <expression>) => (n :: <integer>)
-  eval(e);
-end;
-
-define generic eval
+define generic rpn
   (e :: <expression>, #key stack :: <stack>) => (n :: <integer>);
 
-define method eval
+define method rpn
     (e == #(), #key stack :: <stack> = make(<stack>)) 
  => (n :: <integer>)
   unless (stack.size = 1)
@@ -92,7 +87,7 @@ define method eval
   pop(stack)
 end;
 
-define method eval
+define method rpn
     (e :: <expression>, #key stack :: <stack> = make(<stack>)) 
  => (n :: <integer>)
   eval-first(head(e), tail(e), stack)
@@ -108,7 +103,7 @@ end;
 
 define method eval-first
     (o :: <operand>, e :: <list>, s :: <stack>) => (n :: <integer>)
-  eval(e, stack: push!(s,o))
+  rpn(e, stack: push!(s,o))
 end;
 
 define method eval-first
@@ -118,5 +113,5 @@ define method eval-first
   for (i from 0 below n)
     operands := add(operands, pop(s))
   end;
-  eval(e, stack: push!(s, apply(f, operands)))
+  rpn(e, stack: push!(s, apply(f, operands)))
 end;

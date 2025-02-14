@@ -29,7 +29,6 @@ define module dylan-rpn-impl
   use dylan-rpn;
 
   export
-    eval,
     <stack>,
     stack,
     push!;
