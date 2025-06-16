@@ -2,10 +2,7 @@ Module: %eratosthenes
 
 define function eratosthenes
     (n :: <integer>) => (primes :: <sequence>)
-  let a = make(<table>);
-  for (i from 2 below n)
-    a[i] := #t
-  end;
+  let a = make(<vector>, size: n, fill: #t);
 
   for (i from 2 to isqrt(n))
     if (a[i])
@@ -16,8 +13,8 @@ define function eratosthenes
   end;
 
   let primes = make(<stretchy-vector>);
-  for (value keyed-by prime in a)
-    if (value) add!(primes, prime) end
+  for (i from 2 below a.size)
+    if (a[i]) add!(primes, i) end
   end;
   primes
 end;
